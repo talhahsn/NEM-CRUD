@@ -1,14 +1,12 @@
 const userService = require('../services/user');
 
-function getAll(req, res, next) {
-  return userService
-    .getAll(req.query.page_number, req.query.page_size)
-    .then(response => {
-      return res.send(response);
-    });
+async function getAll(req, res) {
+  const response = await userService.getAll(req.query.page_number, req.query.page_size);
+  return res.send(response);
+
 }
 
-function create(req, res, next) {
+async function create(req, res) {
   const payload = {
     email: req.body.email,
     password: req.body.password,
@@ -18,35 +16,30 @@ function create(req, res, next) {
     createdAt: Date.now()
   };
 
-  return userService.create(payload).then(response => {
-    return res.send(response);
-  });
+  const response = await userService.create(payload);
+  return res.send(response);
 }
 
-function getOne(req, res, next) {
-  return userService.getUser(req.params.id).then(response => {
-    return res.send(response);
-  });
+async function getOne(req, res) {
+  const response = await userService.getUser(req.params.id);
+  return res.send(response);
 }
 
-function updateUser(req, res, next) {
+async function updateUser(req, res) {
   const payload = {
-    userId: Number(req.params.id),
     email: req.body.email,
+    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    password: req.body.password
   };
 
-  return userService.updateUser(payload).then(() => {
-    return res.send('Success');
-  });
+  await userService.updateUser(payload);
+  return res.send('Success');
 }
 
-function deleteUser(req, res, next) {
-  return userService.deleteUser(req.params.id).then(response => {
-    return res.send(response);
-  });
+async function deleteUser(req, res) {
+  const response = await userService.deleteUser(req.params.id);
+  return res.send(response);
 }
 
 module.exports = {

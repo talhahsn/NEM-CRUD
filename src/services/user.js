@@ -1,33 +1,23 @@
 const userRepo = require('../repositories/user');
 
-function getAll(pageNumber, pageSize) {
-  return userRepo.getAll(pageNumber, pageSize).then(response => {
-    return response;
-  });
+async function getAll(pageNumber, pageSize) {
+  return await userRepo.getAll(pageNumber, pageSize);
 }
 
-function create(payload) {
-  return userRepo.create(payload).then(response => {
-    return response;
-  });
+async function create(payload) {
+  return await userRepo.create(payload);
 }
 
-function getUser(payload) {
-  return userRepo.findOne(payload).then(response => {
-    return response;
-  });
+async function getUser(userId) {
+  return await userRepo.findOne(userId, 'userId');
 }
 
-function updateUser(payload) {
-  return userRepo.update(payload).then(response => {
-    return response;
-  });
+async function updateUser(payload) {
+  return await userRepo.update(payload);
 }
 
-function deleteUser(payload) {
-  return userRepo.deleteUser(payload).then(response => {
-    return response;
-  });
+async function deleteUser(payload) {
+  return await userRepo.deleteUser(payload);
 }
 
 module.exports = {

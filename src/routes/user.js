@@ -2,14 +2,23 @@ const express = require('express');
 const userController = require('../controllers/user');
 const router = express.Router();
 
-router.get('/', userController.getAll);
+function asyncTryCatchMiddleware(handler){
+    return async (req, res, next) => {
+       try{
+           await handler(req, res);
+       } catch(error) {
+           next(error)
+       }
+    };
+}
 
-router.post('/', userController.create);
+router.route('/')
+    .get(asyncTryCatchMiddleware(userController.getAll))
+    .put(asyncTryCatchMiddleware(userController.updateUser))
+    .post(asyncTryCatchMiddleware(userController.create));
 
-router.get('/:id', userController.getOne);
-
-router.put('/:id', userController.updateUser);
-
-router.delete('/:id', userController.deleteUser);
+router.route('/:id')
+    .get(asyncTryCatchMiddleware(userController.getOne))
+    .delete(asyncTryCatchMiddleware(userController.deleteUser));
 
 module.exports = router;

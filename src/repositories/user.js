@@ -11,25 +11,23 @@ async function getAll(pageNumber, pageSize) {
   return User.find();
 }
 
-function create(payload) {
-  return User.count().then(counter => {
-    payload.userId = counter++;
-    return User.create(payload);
-  });
+async function create(payload) {
+  let counter = await User.count();
+  payload.userId = counter++;
+  return User.create(payload);
 }
 
-function findOne(id) {
-  return User.findOne({ userId: id });
+function findOne(value, attr) {
+  return User.findOne({ [attr]: value });
 }
 
-function update(payload) {
-  return findOne(payload.userId).then(currObj => {
-    payload = JSON.parse(JSON.stringify(payload));
-    Object.keys(payload).forEach(key => {
-      currObj[key] = payload[key];
-    });
-    return User.findOneAndUpdate({ userId: payload.userId }, currObj);
+async function update(payload) {
+  const currObj = await findOne(payload.email, 'email');
+  payload = JSON.parse(JSON.stringify(payload));
+  Object.keys(payload).forEach(key => {
+    currObj[key] = payload[key];
   });
+  return User.findOneAndUpdate({ email: payload.email }, currObj);
 }
 
 function deleteUser(payload) {
